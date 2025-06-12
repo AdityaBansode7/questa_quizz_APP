@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  quizzes   Quiz[]
+  responses Response[]
+
+  @@map("users")
+}
+
+model Quiz {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  questions   Question[]
+  responses   Response[]
+
+  @@map("quizzes")
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  quizId    String
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
+  text      String
+  type      String   // "single_choice" or "short_answer"
+  options   String[]
+  order     Int
+  createdAt DateTime @default(now())
+  answers   Answer[]
+
+  @@map("questions")
+}
+
+model Response {
+  id        String   @id @default(uuid())
+  quizId    String
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  answers   Answer[]
+
+  @@map("responses")
+}
+
+model Answer {
+  id          String   @id @default(uuid())
+  responseId  String
+  response    Response @relation(fields: [responseId], references: [id])
+  questionId  String
+  question    Question @relation(fields: [questionId], references: [id])
+  textAnswer  String?
+  optionIndex Int?
+  createdAt   DateTime @default(now())
+
+  @@map("answers")
+}
