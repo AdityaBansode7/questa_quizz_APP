@@ -6,10 +6,15 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/page": [
+    "/(auth)/login/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
+      "static/chunks/app/(auth)/login/page.js"
+    ],
+    "/api/auth/login/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/auth/login/route.js"
     ],
     "/dashboard/layout": [
       "static/chunks/webpack.js",
@@ -21,15 +26,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/dashboard/page.js"
     ],
-    "/(auth)/login/page": [
+    "/dashboard/quizzes/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(auth)/login/page.js"
+      "static/chunks/app/dashboard/quizzes/page.js"
     ],
-    "/quiz/[id]/page": [
+    "/dashboard/new-quiz/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/quiz/[id]/page.js"
+      "static/chunks/app/dashboard/new-quiz/page.js"
     ]
   }
 }

@@ -24,25 +24,30 @@
     "@radix-ui/react-tabs": "^1.1.12",
     "@radix-ui/react-toast": "^1.2.14",
     "@supabase/supabase-js": "^2.50.0",
+    "bcryptjs": "^2.4.3",
     "date-fns": "^3.6.0",
     "lucide-react": "^0.379.0",
     "next": "15.3.3",
-    "next-auth": "^4.24.11",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "recharts": "^2.12.7"
   },
   "devDependencies": {
-    "@types/next-auth": "^3.13.0",
-    "@types/node": "20.11.25",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.19.0",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.1",
     "autoprefixer": "10.4.19",
+    "esbuild-register": "^3.6.0",
     "eslint": "8.57.0",
     "eslint-config-next": "15.3.3",
     "postcss": "8.4.38",
     "prisma": "^5.14.0",
     "tailwindcss": "3.4.1",
-    "typescript": "5.4.5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   }
 }

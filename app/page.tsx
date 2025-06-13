@@ -1,9 +1,9 @@
+import { getSession } from '@/lib/auth'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { getSession } from '@/lib/auth'
 
 export default async function Home() {
-  const session = await getSession()
+  const session = await getSession() // This will now work properly
 
   return (
     <div className="text-center py-20 px-4">

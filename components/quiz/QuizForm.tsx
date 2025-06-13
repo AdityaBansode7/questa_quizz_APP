@@ -1,11 +1,14 @@
 'use client'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import QuestionCard from './QuestionCard'
-import { Button } from '@/components/ui/button'
 
-export default function QuizForm({ quiz }: { quiz: any }) {
-  const router = useRouter()
+export default function QuizForm({ 
+  quiz,
+  onSubmit
+}: { 
+  quiz: any,
+  onSubmit: (answers: any) => Promise<void>
+}) {
   const [answers, setAnswers] = useState<Record<string, string | number>>({})
   const [submitting, setSubmitting] = useState(false)
 
@@ -20,26 +23,14 @@ export default function QuizForm({ quiz }: { quiz: any }) {
     e.preventDefault()
     setSubmitting(true)
 
-    const formattedAnswers = quiz.questions.map((q: any) => {
-      const answer = answers[q.id]
-      return {
-        questionId: q.id,
-        textAnswer: q.type === 'short_answer' ? String(answer) : undefined,
-        optionIndex: q.type === 'single_choice' ? Number(answer) : undefined
-      }
-    })
+    const formattedAnswers = quiz.questions.map((q: any) => ({
+      questionId: q.id,
+      textAnswer: q.type === 'short_answer' ? String(answers[q.id] || '') : undefined,
+      optionIndex: q.type === 'single_choice' ? Number(answers[q.id]) : undefined
+    }))
 
     try {
-      const response = await fetch(`/api/quiz/${quiz.id}/responses`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers: formattedAnswers })
-      })
-
-      if (response.ok) {
-        const { responseId } = await response.json()
-        router.push(`/quiz/thank-you?responseId=${responseId}`)
-      }
+      await onSubmit(formattedAnswers)
     } catch (error) {
       console.error('Submission failed', error)
     } finally {
@@ -58,9 +49,13 @@ export default function QuizForm({ quiz }: { quiz: any }) {
         />
       ))}
       <div className="mt-6">
-        <Button type="submit" disabled={submitting}>
+        <button
+          type="submit"
+          className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 disabled:opacity-50"
+          disabled={submitting}
+        >
           {submitting ? 'Submitting...' : 'Submit Answers'}
-        </Button>
+        </button>
       </div>
     </form>
   )

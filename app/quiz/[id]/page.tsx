@@ -1,10 +1,13 @@
-// app/quiz/[id]/page.tsx
-import { notFound } from 'next/navigation'
-import prisma from '@/lib/db' // ✅ Ensure this file exports a working PrismaClient
+import { notFound, redirect } from 'next/navigation'
+import prisma from '@/lib/db'
 import QuizForm from '@/components/quiz/QuizForm'
 
-export default async function PublicQuizPage({ params }: { params: { id: string } }) {
-  const { id } = params  // ✅ Destructure early to avoid Next.js warning
+export default async function PublicQuizPage({ 
+  params 
+}: { 
+  params: { id: string } 
+}) {
+  const id = params.id // Properly access params
 
   const quiz = await prisma.quiz.findUnique({
     where: { id },
@@ -17,6 +20,28 @@ export default async function PublicQuizPage({ params }: { params: { id: string 
 
   if (!quiz) return notFound()
 
+  async function handleSubmit(answers: any) {
+    'use server'
+    try {
+      const response = await prisma.response.create({
+        data: {
+          quizId: id,
+          answers: {
+            create: answers.map((a: any) => ({
+              questionId: a.questionId,
+              textAnswer: a.textAnswer,
+              optionIndex: a.optionIndex
+            }))
+          }
+        }
+      })
+      redirect(`/quiz/thank-you?responseId=${response.id}`)
+    } catch (error) {
+      console.error('Submission failed:', error)
+      throw error
+    }
+  }
+
   return (
     <div className="max-w-3xl mx-auto p-6">
       <div className="mb-8 text-center">
@@ -24,7 +49,7 @@ export default async function PublicQuizPage({ params }: { params: { id: string 
         {quiz.description && <p className="text-gray-600">{quiz.description}</p>}
       </div>
       
-      <QuizForm quiz={quiz} />
+      <QuizForm quiz={quiz} onSubmit={handleSubmit} />
     </div>
   )
 }

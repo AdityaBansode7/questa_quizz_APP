@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { signInWithEmail } from '@/lib/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -19,11 +18,20 @@ export default function LoginForm() {
     setError('')
     
     try {
-      const { error } = await signInWithEmail(email, password)
-      if (error) throw error
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+      
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to sign in')
+      }
+      
       router.push('/dashboard')
     } catch (err: any) {
-      setError(err.message || 'Failed to sign in')
+      setError(err.message)
     } finally {
       setLoading(false)
     }
@@ -54,9 +62,7 @@ export default function LoginForm() {
         </div>
       </div>
 
-      {error && (
-        <div className="text-red-500 text-sm">{error}</div>
-      )}
+      {error && <div className="text-red-500 text-sm">{error}</div>}
 
       <div>
         <Button

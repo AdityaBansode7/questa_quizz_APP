@@ -9,7 +9,7 @@ export default function Footer() {
           </div>
           <div className="flex space-x-4">
             <a 
-              href="https://github.com/yourusername" 
+              href="https://github.com/AdityaBansode7/questa_quizz_MERN.git" 
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm hover:underline"
@@ -17,7 +17,7 @@ export default function Footer() {
               GitHub
             </a>
             <a 
-              href="https://linkedin.com/in/yourprofile" 
+              href="https://linkedin.com/in/linkedin.com/in/aditya-bansode-46aaa124a" 
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm hover:underline"

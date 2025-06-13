@@ -1,15 +1,14 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { signUpWithEmail } from '@/lib/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 export default function SignupForm() {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -20,11 +19,21 @@ export default function SignupForm() {
     setError('')
     
     try {
-      const { error } = await signUpWithEmail(email, password, name)
-      if (error) throw error
-      router.push('/dashboard')
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      })
+      
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to sign up')
+      }
+      
+      // Redirect to login page after successful signup
+      router.push('/login')
     } catch (err: any) {
-      setError(err.message || 'Failed to sign up')
+      setError(err.message)
     } finally {
       setLoading(false)
     }
@@ -64,9 +73,7 @@ export default function SignupForm() {
         </div>
       </div>
 
-      {error && (
-        <div className="text-red-500 text-sm">{error}</div>
-      )}
+      {error && <div className="text-red-500 text-sm">{error}</div>}
 
       <div>
         <Button
