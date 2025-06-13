@@ -1,7 +1,8 @@
 import { getSession } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import prisma from '@/lib/db'
-import ResponsesPage from '@/app/dashboard/quizzes/[quizId]/responses'
+// import ResponsesPage from '@/app/dashboard/quizzes/[quizId]/responses'
+
 
 export default async function QuizResponsesPage({ params }: { params: { quizId: string } }) {
   const session = await getSession()
